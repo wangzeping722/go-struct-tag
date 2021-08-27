@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import * as util from './util';
 
-const supportedTypes = ['json', 'bson', 'xorm', 'gorm', 'form'];
 const supportedTypeMaxLen = 5;
 const structFieldRegex = /^\s*([a-zA-Z_][a-zA-Z_\d]*)\s+(.+)`(.*)/;
 
@@ -36,6 +35,9 @@ function getMatchTypes(word: string): MatchTypeResult {
 	if (word === '') {
 		return result;
 	}
+
+	let supportedTypes = vscode.workspace.getConfiguration("goStructTag").get("tags") as Array<string>;
+	
 	for (let i = 0; i < supportedTypes.length; i++) {
 		if (supportedTypes[i].startsWith(word)) {
 			result.hit = true;
@@ -60,6 +62,23 @@ function generateFormCompletion(fieldName: string, fieldType: string): vscode.Co
 		new vscode.CompletionItem(`form:"-"`, vscode.CompletionItemKind.Text),
 	];
 }
+
+function generateYamlCompletion(fieldName: string, fieldType: string): vscode.CompletionItem[] {
+	return [
+		new vscode.CompletionItem(`yaml:"${fieldName}"`, vscode.CompletionItemKind.Text),
+		new vscode.CompletionItem(`yaml:"${fieldName},omitempty"`, vscode.CompletionItemKind.Text),
+		new vscode.CompletionItem(`yaml:"-"`, vscode.CompletionItemKind.Text),
+	];
+}
+
+function generateDefaultCompletion(tag: string, fieldName: string, fieldType: string): vscode.CompletionItem[] {
+	return [
+		new vscode.CompletionItem(`${tag}:"${fieldName}"`, vscode.CompletionItemKind.Text),
+		new vscode.CompletionItem(`${tag}:"${fieldName},omitempty"`, vscode.CompletionItemKind.Text),
+		new vscode.CompletionItem(`${tag}:"-"`, vscode.CompletionItemKind.Text),
+	];
+}
+
 
 function generateBsonCompletion(fieldName: string, fieldType: string): vscode.CompletionItem[] {
 	let items: vscode.CompletionItem[] = [];
@@ -245,6 +264,12 @@ export function activate(context: vscode.ExtensionContext) {
 						case 'form':
 							items.push(...generateFormCompletion(fieldNameFormat, fieldType));
 							break;
+						case 'yaml':
+							items.push(...generateYamlCompletion(fieldNameFormat, fieldType));
+							break;
+						default:
+							items.push(...generateDefaultCompletion(match.types[i], fieldNameFormat, fieldType));
+							break;
 					}
 				}
 
@@ -261,7 +286,7 @@ export function activate(context: vscode.ExtensionContext) {
 				return items;
 			}
 		},
-		'j', 's', 'o', 'n', 'b', 'x', 'r', 'm', 'g', 'f'
+		'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'
 	);
 
 	context.subscriptions.push(structTagCompletion);

@@ -11,7 +11,7 @@
 		"json"
 	],
 	"version": "0.0.12",
-	"publisher": "wangzeping",
+	"publisher": "wero",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/wangzeping722/go-struct-tag"
@@ -37,7 +37,12 @@
 				  "type": "string",
 				  "default": "default",
 				  "description": "tag type"
-				}
+				},
+				"goStructTag.tags": {
+					"type": "array",
+					"default": ["json", "bson", "xorm", "gorm", "form", "yaml"],
+					"description": "tags"
+				  }
 			  }
 			}
 		  ]
