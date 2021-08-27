@@ -28,4 +28,8 @@ suite('Function Test Suite', () => {
 		assert.strictEqual('my_uid', util.gonicCasedName('MyUID'));
 		assert.strictEqual('seq_id_tag', util.gonicCasedName('SeqIDTag'));
 	});
+
+	test('lowerCasedName test', () => {
+		assert.strictEqual('idId', util.lowerCamelCase('IdId'));
+	});
 });

@@ -219,7 +219,12 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 
 				let fieldName = field[1];
+				let tagType = vscode.workspace.getConfiguration("goStructTag").get("tagType");
 				let fieldNameFormat = util.gonicCasedName(fieldName);
+
+				if (tagType === "lowerCamelCase") {
+					fieldNameFormat = util.lowerCamelCase(fieldName);
+				}
 				let fieldType = field[2].trim();
 				let items: vscode.CompletionItem[] = [];
 
